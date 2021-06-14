@@ -7,10 +7,11 @@ class list{
 using namespace std;
 typedef list* link_List;
 int ric(link_List &l,int r){
-    link_List scorri=l;
-    if(!l||r==0){   /*se lista vuota oppure r==0*/
+    link_List scorri=l;  /*pointer di scorrimento*/
+    if(!l||r==0){
         return 0;
     }
+    /*max non ricorsivo*/
     int max=scorri->informazione;
     while(scorri!=nullptr){
         if(max<scorri->informazione){
@@ -19,17 +20,18 @@ int ric(link_List &l,int r){
         scorri=scorri->next;
     }
 
+    /*invariato */
     if(l->informazione==max){
         link_List delete_me=l;
         l=l->next;
         delete delete_me;
     }else{
-        link_List search=l;
-        while(search->next->informazione!=max){
-            search=search->next;
-        }/*elemento precedente all'elemento da eliminare*/
-        link_List delete_me  =search->next;
-        search->next    =delete_me->next;
+        scorri=l;   /*reset pointer di scorrimento alla testa della lista*/
+        while(scorri->next->informazione!=max){
+            scorri=scorri->next;
+        }
+        link_List delete_me  =scorri->next;
+        scorri->next    =delete_me->next;
         delete delete_me;
     }
     return 1+ ric(l,r-1);
@@ -62,6 +64,9 @@ int main(){
     lista->next->next=new list;
     lista->next->next->informazione=3;
     lista->next->next->next=nullptr;
+    int rimuovi;
+    cout<<"quanti elementi vuoi rimuovere>=0?"<<endl;
+    cin>>rimuovi;
     cout<<"lista originale\t";stampaLista(lista);
 
 
@@ -69,7 +74,7 @@ int main(){
 
 
 
-    int elementi_rimossi=ric(lista,4);
+    int elementi_rimossi=ric(lista,rimuovi);
     cout<<"\nelementi effettivamente rimossi: "<<elementi_rimossi<<"\n"<<endl;
 
 
